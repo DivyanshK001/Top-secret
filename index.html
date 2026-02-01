@@ -5,112 +5,130 @@
 <title>Top Secret</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
-  text-align: center;
-  background: black;
-  color: white;
+body{
+ margin:0;
+ font-family:Georgia, serif;
+ overflow:hidden;
+ background:black;
+ text-align:center;
 }
 
 /* intro */
-#intro {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle, #2b003a, black);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  animation: fadeIntro 3s forwards;
+#intro{
+ position:fixed;
+ inset:0;
+ background:radial-gradient(circle,#2b003a,black);
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ z-index:10;
+ animation:fadeIntro 3s forwards;
 }
 
-@keyframes fadeIntro {
-  0%,80% {opacity:1}
-  100% {opacity:0; visibility:hidden}
+@keyframes fadeIntro{
+ 0%,80%{opacity:1}
+ 100%{opacity:0;visibility:hidden}
 }
 
 /* password */
-#lock {
-  position: fixed;
-  inset: 0;
-  background: #111;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9;
+#lock{
+ position:fixed;
+ inset:0;
+ background:#111;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ z-index:20;
+ color:white;
 }
 
-input {
-  padding: 10px;
-  font-size: 18px;
-  border-radius: 8px;
-  border: none;
-  margin-top: 10px;
+#lock input{
+ margin-top:10px;
+ padding:8px;
 }
 
-/* main */
-#main {
-  display: none;
-  height: 100vh;
-  background: linear-gradient(135deg, #ff9ec4, #ffd6e8);
-  color: black;
-  transition: filter 1s;
+#lock button{
+ margin-top:10px;
+ position:static;
 }
 
-#spotlight {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0);
-  pointer-events: none;
-  transition: background 1s;
+/* pink area */
+#main{
+ display:none;
+ height:100vh;
+ background:linear-gradient(135deg,#ff9ec4,#ffd6e8);
+ color:black;
+ position:relative;
+ overflow:hidden;
 }
 
-.zoom {
-  animation: zoomIn 4s forwards;
+/* layout */
+#content{
+ position:relative;
+ z-index:2;
 }
 
-@keyframes zoomIn {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
+#row{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ gap:20px;
+ margin-top:40px;
 }
 
-img {
-  width: 240px;
-  border-radius: 20px;
-  margin-top: 20px;
+img{
+ width:240px;
+ border-radius:20px;
 }
 
-button {
-  font-size: 20px;
-  padding: 12px 25px;
-  margin: 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+/* buttons */
+button{
+ font-size:20px;
+ padding:12px 25px;
+ border:none;
+ border-radius:10px;
+ cursor:pointer;
 }
 
-#yesBtn { background:#ff2e63; color:white; }
-#noBtn { background:#333; color:white; position:absolute; }
-
-#message {
-  font-size: 26px;
-  margin-top: 30px;
-  white-space: pre-line;
+#yesBtn{
+ background:#ff2e63;
+ color:white;
 }
 
-/* hearts */
-.heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 24px;
-  animation: floatUp 6s linear infinite;
+#noBtn{
+ position:absolute;
+ background:#333;
+ color:white;
+ z-index:3;
 }
 
-@keyframes floatUp {
-  to { transform: translateY(-110vh); opacity:0; }
+/* message */
+#message{
+ font-size:34px;
+ margin-top:30px;
+ white-space:pre-line;
+ color:#ff006a;
+ font-weight:bold;
+ text-shadow:0 0 10px #fff,0 0 25px #ff69b4;
+}
+
+/* particle layer */
+#fx{
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+ z-index:1;
+}
+
+.p{
+ position:absolute;
+ font-size:42px;
+ animation:fall 7s linear forwards;
+}
+
+@keyframes fall{
+ to{transform:translateY(110vh) rotate(360deg);opacity:0}
 }
 </style>
 </head>
@@ -120,155 +138,130 @@ button {
 <div id="intro"><h1>VERY IMPORTANT AND CONFIDENTIAL....</h1></div>
 
 <div id="lock">
-  <h2>Enter password 🔒</h2>
-  <input id="pass" type="password" placeholder="password">
-  <button onclick="unlock()">Enter</button>
+<h2>Enter password 🔒</h2>
+<input id="pass" type="password">
+<button onclick="unlock()">Enter</button>
 </div>
 
 <div id="main">
-  <h1 style="margin-top: 80px;">Will you be my Valentine? ❤️</h1>
-  <img src="bang10.png">
-  <button id="yesBtn">Yes</button>
-  <button id="noBtn">Dekhti hu</button>
-  <div id="message"></div>
+
+<div id="fx"></div>
+
+<div id="content">
+<h1>Will you be my Valentine? ❤️</h1>
+
+<div id="row">
+<img src="bang10.png">
+<button id="yesBtn">Yes</button>
 </div>
 
-<div id="spotlight"></div>
+<div id="message"></div>
+</div>
+
+<button id="noBtn">Dekhti hu</button>
+
+</div>
 
 <audio id="music" src="music.mp3" loop></audio>
 
 <script>
-const correct = "i love divyansh";
-const main = document.getElementById("main");
-const lock = document.getElementById("lock");
-const music = document.getElementById("music");
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const msg = document.getElementById("message");
-const spotlight = document.getElementById("spotlight");
+const main=document.getElementById("main");
+const lock=document.getElementById("lock");
+const noBtn=document.getElementById("noBtn");
+const yesBtn=document.getElementById("yesBtn");
+const msg=document.getElementById("message");
+const music=document.getElementById("music");
+const fx=document.getElementById("fx");
+
+let armed=false;
+
+/* place beside Yes */
+function placeNextToYes(){
+ const yRect=yesBtn.getBoundingClientRect();
+ const mRect=main.getBoundingClientRect();
+ const x=yRect.right-mRect.left+20;
+ const y=yRect.top-mRect.top;
+ noBtn.style.left=x+"px";
+ noBtn.style.top=y+"px";
+}
 
 /* unlock */
 function unlock(){
-  if(document.getElementById("pass").value === correct){
-    lock.style.display="none";
-    main.style.display="block";
-    music.volume = 0.2;
-    music.play().catch(()=>{});
-  }
+ if(document.getElementById("pass").value==="yes"){
+  lock.style.display="none";
+  main.style.display="block";
+  music.volume=0.2;
+  music.play().catch(()=>{});
+  armed=true;
+  startRain();
+  requestAnimationFrame(placeNextToYes);
+ }
 }
 
-/* runaway no */
-function move(){
-  noBtn.style.left = Math.random()*(window.innerWidth-120)+"px";
-  noBtn.style.top = Math.random()*(window.innerHeight-80)+"px";
-}
-noBtn.onmouseover = move;
-noBtn.ontouchstart = e => { e.preventDefault(); move(); };
+/* roam */
+noBtn.addEventListener("mouseenter",()=>{
+ if(!armed) return;
 
-/* typing */
-function typeMessage(text, callback) {
-  msg.innerHTML = "";
-  let i = 0;
-  function typing() {
-    if (i < text.length) {
-      msg.innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typing, 35);
-    } else if (callback) callback();
-  }
-  typing();
+ const maxX=main.clientWidth-noBtn.offsetWidth;
+ const maxY=main.clientHeight-noBtn.offsetHeight;
+
+ noBtn.style.left=Math.random()*maxX+"px";
+ noBtn.style.top=Math.random()*maxY+"px";
+
+ laughBurst();
+});
+
+/* laugh */
+function laughBurst(){
+ for(let i=0;i<6;i++) spawn("😂");
 }
 
-/* heartbeat vibration */
-function heartbeat(){
-  if(navigator.vibrate){
-    navigator.vibrate([120,60,120,60,200]);
-  }
-}
-
-/* music swell */
-function swell(){
-  let v = music.volume;
-  const rise = setInterval(()=>{
-    if(v < 1){
-      v += 0.05;
-      music.volume = v;
-    } else clearInterval(rise);
-  },150);
-}
-
-/* spotlight + zoom */
-function cinematic(){
-  spotlight.style.background="rgba(0,0,0,0.6)";
-  main.classList.add("zoom");
-}
-
-/* yes click */
-yesBtn.onclick = ()=>{
-  const text = "😘😘😘😘😘\nGood choice\nNothing feels complete when you’re not around Bang!\nPrepare yourself. Unlimited hugs and kisses incoming.";
-  cinematic();
-  heartbeat();
-  typeMessage(text, swell);
-  confetti();
-  fireworks();
+/* yes */
+yesBtn.onclick=()=>{
+ armed=false;
+ typeText("😘😘😘😘😘\n\nGood choice\nNothing feels complete when you’re not around Bang!\nPrepare yourself. Unlimited hugs and kisses incoming.");
+ yesExplosion();
 };
 
-/* hearts */
-setInterval(()=>{
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerHTML="💖";
-  h.style.left=Math.random()*100+"vw";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
-},600);
-
-/* confetti */
-function confetti(){
-  for(let i=0;i<200;i++){
-    const c=document.createElement("div");
-    c.style.position="fixed";
-    c.style.width="8px";
-    c.style.height="8px";
-    c.style.background=`hsl(${Math.random()*360},100%,50%)`;
-    c.style.left=Math.random()*100+"vw";
-    c.style.top="-10px";
-    c.style.transition="transform 3s linear,opacity 3s";
-    document.body.appendChild(c);
-    setTimeout(()=>{
-      c.style.transform="translateY(120vh) rotate(720deg)";
-      c.style.opacity=0;
-    },10);
-    setTimeout(()=>c.remove(),3000);
-  }
+/* background rain */
+function startRain(){
+ setInterval(()=>spawn("🌹"),200);
+ setInterval(()=>spawn("😘"),250);
+ setInterval(()=>spawn("❤️"),350);
+ setInterval(()=>spawn("✨"),180);
 }
 
-/* fireworks */
-function fireworks(){
-  for(let r=0;r<6;r++){
-    setTimeout(()=>{
-      const x=Math.random()*window.innerWidth;
-      const y=Math.random()*window.innerHeight/2;
-      for(let i=0;i<40;i++){
-        const f=document.createElement("div");
-        f.style.position="fixed";
-        f.style.width="6px";
-        f.style.height="6px";
-        f.style.borderRadius="50%";
-        f.style.background=`hsl(${Math.random()*360},100%,50%)`;
-        f.style.left=x+"px";
-        f.style.top=y+"px";
-        document.body.appendChild(f);
-        const angle=Math.random()*2*Math.PI;
-        const dist=100+Math.random()*100;
-        f.animate([
-          {transform:"translate(0,0)",opacity:1},
-          {transform:`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`,opacity:0}
-        ],{duration:1200});
-        setTimeout(()=>f.remove(),1200);
-      }
-    },r*400);
+/* YES explosion */
+function yesExplosion(){
+ setInterval(()=>{
+  for(let i=0;i<20;i++){
+   spawn("🌹");
+   spawn("😘");
+   spawn("❤️");
   }
+ },350);
+}
+
+/* particle */
+function spawn(char){
+ const e=document.createElement("div");
+ e.className="p";
+ e.innerHTML=char;
+ e.style.left=Math.random()*100+"%";
+ fx.appendChild(e);
+ setTimeout(()=>e.remove(),7000);
+}
+
+/* typing */
+function typeText(t){
+ msg.innerHTML="";
+ let i=0;
+ (function loop(){
+  if(i<t.length){
+   msg.innerHTML+=t[i++];
+   setTimeout(loop,35);
+  }
+ })();
 }
 </script>
 
